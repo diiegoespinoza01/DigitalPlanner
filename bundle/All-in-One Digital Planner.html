@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Planner Digital Todo en Uno · Linen Paper Co.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="brand.jsx"></script>
+<script type="text/babel" src="covers.jsx"></script>
+<script type="text/babel" src="masters-core.jsx"></script>
+<script type="text/babel" src="masters-week.jsx"></script>
+<script type="text/babel" src="masters-extras.jsx"></script>
+<script type="text/babel" src="mockups.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState } = React;
+const PW = 1080, PH = 810, MW = 2000, MH = 1500;
+
+function App() {
+  return (
+    <DesignCanvas>
+      {/* 01 · PORTADA — un diseño, 6 colorways */}
+      <DCSection id="portada" title="01 · Portada · 6 paletas" subtitle="Un solo diseño recoloreado en las seis paletas Pantone.">
+        {THEME_ORDER.map((k) => (
+          <DCArtboard key={k} id={`cover-${k}`} label={`Portada · ${THEMES[k].name}`} width={PW} height={PH}>
+            <Cover theme={k} />
+          </DCArtboard>
+        ))}
+      </DCSection>
+
+      {/* 02 · NAVEGACIÓN */}
+      <DCSection id="navegacion" title="02 · Navegación · Hub + Año" subtitle="Índice hiperenlazado y vista anual.">
+        <DCArtboard id="hub" label="Índice / Hub" width={PW} height={PH}><IndexHub theme="greige" /></DCArtboard>
+        <DCArtboard id="anual" label="Vista anual" width={PW} height={PH}><Yearly theme="sage" /></DCArtboard>
+      </DCSection>
+
+      {/* 03 · MASTERS PRINCIPALES */}
+      <DCSection id="principales" title="03 · Masters principales" subtitle="Mensual, semanales (lunes y domingo) y diario.">
+        <DCArtboard id="mensual" label="Mensual" width={PW} height={PH}><MonthlySpread theme="lavender" /></DCArtboard>
+        <DCArtboard id="sem-lun" label="Semanal · inicio lunes" width={PW} height={PH}><WeeklySpread theme="sky" weekStart={1} /></DCArtboard>
+        <DCArtboard id="sem-dom" label="Semanal · inicio domingo" width={PW} height={PH}><WeeklySpread theme="sky" weekStart={0} /></DCArtboard>
+        <DCArtboard id="diario" label="Diario" width={PW} height={PH}><Daily theme="blush" /></DCArtboard>
+      </DCSection>
+
+      {/* 04 · MASTERS DE SECCIÓN */}
+      <DCSection id="secciones" title="04 · Masters de sección" subtitle="Hábitos, finanzas, bienestar y productividad.">
+        <DCArtboard id="habitos" label="Tracker de hábitos" width={PW} height={PH}><HabitTracker theme="sage" /></DCArtboard>
+        <DCArtboard id="finanzas" label="Finanzas" width={PW} height={PH}><Finance theme="clay" /></DCArtboard>
+        <DCArtboard id="bienestar" label="Bienestar" width={PW} height={PH}><Wellness theme="sage" /></DCArtboard>
+        <DCArtboard id="productividad" label="Productividad" width={PW} height={PH}><Productivity theme="greige" /></DCArtboard>
+      </DCSection>
+
+      {/* 05 · EXTRAS */}
+      <DCSection id="extras" title="05 · Extras" subtitle="Notas (rayado + punteado) y hoja de stickers.">
+        <DCArtboard id="notas" label="Notas" width={PW} height={PH}><Notes theme="greige" /></DCArtboard>
+        <DCArtboard id="stickers" label="Stickers funcionales" width={PW} height={PH}><Stickers theme="blush" /></DCArtboard>
+      </DCSection>
+
+      {/* 06 · MOCKUPS ETSY */}
+      <DCSection id="mockups" title="06 · Mockups Etsy · 2000×1500" subtitle="Cuatro imágenes de listing listas para subir.">
+        <DCArtboard id="mk1" label="Hero · Todo en uno" width={MW} height={MH}><Mockup1Hero theme="greige" /></DCArtboard>
+        <DCArtboard id="mk2" label="Características" width={MW} height={MH}><Mockup2Features theme="sage" /></DCArtboard>
+        <DCArtboard id="mk3" label="Contenido · 12 miniaturas" width={MW} height={MH}><Mockup3Contents theme="clay" /></DCArtboard>
+        <DCArtboard id="mk4" label="Las 6 paletas" width={MW} height={MH}><Mockup4Themes theme="lavender" /></DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
