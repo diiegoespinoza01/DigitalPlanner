@@ -246,9 +246,26 @@ body { display: flex; flex-direction: column; }
   position: relative; transform-origin: top center; flex-shrink: 0;
 }
 
-/* ── Router: solo visible la página activa ── */
-.lp-page { display: none !important; }
+/* ── Páginas base (estilos que brand.jsx inyecta en browser, aquí los ponemos estáticos) ── */
+.lp-page {
+  display: none !important;
+  position: relative; box-sizing: border-box; overflow: hidden;
+  background: #F5EFE6;
+  font-family: 'Manrope', -apple-system, system-ui, sans-serif;
+  color: #2B2622; -webkit-font-smoothing: antialiased;
+}
 .lp-page.is-active { display: flex !important; }
+.lp-page::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .35;
+  background-image: radial-gradient(rgba(120,105,82,.16) .6px, transparent .7px);
+  background-size: 3px 3px; mix-blend-mode: multiply;
+}
+.lp-page > * { position: relative; z-index: 1; }
+.lp-link { cursor: pointer; transition: opacity .12s, color .12s; text-decoration: none; }
+.lp-link:hover { opacity: .62; }
+.lp-cb { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.lp-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+.lp-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
 /* ── Inputs / Textareas (lp-field, lp-area) ── */
 .lp-field, .lp-area {
@@ -556,6 +573,24 @@ function rescale(){
   }
 }
 window.addEventListener('resize', rescale);
+
+// ── Navegación: interceptar clics en <a href="#id"> de páginas ──
+document.addEventListener('click', e=>{
+  const a=e.target.closest('a[href^="#"]');
+  if(!a) return;
+  const hash=a.getAttribute('href').slice(1);
+  if(!hash) return;
+  const el=document.getElementById(hash);
+  if(el&&el.classList.contains('lp-page')){ e.preventDefault(); show(hash); }
+});
+
+// hashchange para soporte del historial del navegador
+window.addEventListener('hashchange',()=>{
+  const hash=location.hash.slice(1);
+  if(!hash) return;
+  const el=document.getElementById(hash);
+  if(el&&el.classList.contains('lp-page')) show(hash);
+});
 
 // ── Teclado ──
 document.addEventListener('keydown', e=>{
