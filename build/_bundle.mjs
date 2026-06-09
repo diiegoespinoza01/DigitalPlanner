@@ -16619,7 +16619,7 @@ function IndexHub({ theme = "greige", id }) {
     letterSpacing: -1,
     color: LP.ink,
     marginTop: 16
-  } }, "Tu a\xF1o,", /* @__PURE__ */ import_react.default.createElement("br", null), /* @__PURE__ */ import_react.default.createElement("span", { style: { fontStyle: "italic", color: c.ink } }, "en una sola toca.")), /* @__PURE__ */ import_react.default.createElement("div", { style: {
+  } }, "Tu a\xF1o,", /* @__PURE__ */ import_react.default.createElement("br", null), /* @__PURE__ */ import_react.default.createElement("span", { style: { fontStyle: "italic", color: c.ink } }, "en un solo lugar.")), /* @__PURE__ */ import_react.default.createElement("div", { style: {
     fontFamily: LP.sans,
     fontSize: 13,
     color: LP.ink2,

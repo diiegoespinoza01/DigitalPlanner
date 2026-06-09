@@ -368,7 +368,7 @@ function IndexHub({ theme = 'greige', id }) {
           <Eyebrow color={c.deep}>Índice interactivo · todo enlazado</Eyebrow>
           <div className="lp-serif" style={{ fontWeight: 500, fontSize: 62, lineHeight: .95,
             letterSpacing: -1, color: LP.ink, marginTop: 16 }}>
-            Tu año,<br /><span style={{ fontStyle: 'italic', color: c.ink }}>en una sola toca.</span>
+            Tu año,<br /><span style={{ fontStyle: 'italic', color: c.ink }}>en un solo lugar.</span>
           </div>
           <div style={{ fontFamily: LP.sans, fontSize: 13, color: LP.ink2, marginTop: 14,
             lineHeight: 1.6, maxWidth: 420 }}>
