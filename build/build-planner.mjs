@@ -337,14 +337,17 @@ label:has(.lp-toggle-care:checked) {
 @page { size: ${PAGE_W}px ${PAGE_H}px; margin: 0; }
 @media print {
   #lp-toolbar { display: none !important; }
-  #lp-fit { display: block !important; overflow: visible !important;
-    padding: 0 !important; align-items: flex-start !important; }
-  #lp-stage { transform: none !important; width: ${PAGE_W}px !important;
+  #lp-fit { display: block !important; overflow: visible !important; padding: 0 !important; }
+  #lp-stage { transform: none !important; margin: 0 !important; width: ${PAGE_W}px !important;
     height: auto !important; position: static !important; }
+  /* Imprimir todo (Ctrl+P) */
   .lp-page { display: flex !important; page-break-after: always; break-after: page;
-    position: relative !important; top: auto !important; left: auto !important;
-    width: ${PAGE_W}px !important; height: ${PAGE_H}px !important; }
+    position: relative !important; width: ${PAGE_W}px !important; height: ${PAGE_H}px !important; }
   .lp-page:last-child { page-break-after: avoid; break-after: avoid; }
+  /* Exportar PDF: solo la página activa */
+  html.lp-print-single .lp-page { display: none !important; }
+  html.lp-print-single .lp-page.is-active { display: flex !important;
+    page-break-after: avoid !important; break-after: avoid !important; }
 }
 `;
 }
@@ -397,6 +400,18 @@ function show(id){
   if(fit){ fit.scrollTop=0; fit.scrollLeft=0; }
 }
 window.show = show;
+
+function prevPage(){
+  const a=document.querySelector('.lp-page.is-active');
+  const ci=a?PAGES.indexOf(a.id):-1;
+  if(ci>0) show(PAGES[ci-1]);
+}
+function nextPage(){
+  const a=document.querySelector('.lp-page.is-active');
+  const ci=a?PAGES.indexOf(a.id):-1;
+  if(ci>=0&&ci<PAGES.length-1) show(PAGES[ci+1]);
+}
+window.prevPage=prevPage; window.nextPage=nextPage;
 
 // ── Lazy restore ──
 function lazyRestore(pageEl){
@@ -612,15 +627,12 @@ const tbImportFile=document.getElementById('tb-import-file');
 const tbClearPage=document.getElementById('tb-clear-page');
 const tbClearAll=document.getElementById('tb-clear-all');
 
+// Exportar PDF: imprime solo la página activa
 if(tbExport) tbExport.addEventListener('click',()=>{
-  const data={app:DOC_ID,version:1,date:new Date().toISOString(),data:{}};
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith('lp:'+DOC_ID+':')) data.data[k]=localStorage.getItem(k);
-  }
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
-  a.download=DOC_ID+'-datos.json'; a.click();
+  document.documentElement.classList.add('lp-print-single');
+  window.print();
+  // Quitar la clase después de que el diálogo de impresión se cierre
+  setTimeout(()=>{ document.documentElement.classList.remove('lp-print-single'); }, 2000);
 });
 if(tbImport) tbImport.addEventListener('click',()=>{ if(tbImportFile) tbImportFile.click(); });
 if(tbImportFile) tbImportFile.addEventListener('change',e=>{
@@ -680,25 +692,24 @@ function buildToolbarHTML() {
   const dots = THEME_ORDER.map(id =>
     `<span class="tb-dot${id===DEFAULT_THEME?' is-active':''}" data-theme="${id}" style="background:${THEMES[id].mid}" title="${THEMES[id].name}" onclick="applyTheme('${id}')"></span>`
   ).join('');
-  const ps = JSON.stringify(PAGES.map(p=>p.id));
   return `<div id="lp-toolbar">
   <a href="#hub" class="tb-brand" onclick="show('hub');return false;">Linen Paper Co.</a>
   <div class="tb-sep"></div>
   <div class="tb-nav">
-    <button title="Anterior" onclick="(function(){var ps=${ps};var a=document.querySelector('.lp-page.is-active');var ci=a?ps.indexOf(a.id):-1;if(ci>0)show(ps[ci-1]);})()">←</button>
+    <button title="Página anterior" onclick="prevPage()">←</button>
     <span id="tb-label">Portada</span>
-    <button title="Siguiente" onclick="(function(){var ps=${ps};var a=document.querySelector('.lp-page.is-active');var ci=a?ps.indexOf(a.id):-1;if(ci>=0&&ci<ps.length-1)show(ps[ci+1]);})()">→</button>
+    <button title="Página siguiente" onclick="nextPage()">→</button>
   </div>
   <div class="tb-sep"></div>
   <div class="tb-right">
     <div class="tb-dots">${dots}</div>
     <div class="tb-sep"></div>
-    <button class="tb-btn" id="tb-export">Exportar</button>
-    <button class="tb-btn" id="tb-import">Importar</button>
+    <button class="tb-btn" id="tb-export">Exportar PDF</button>
+    <button class="tb-btn" id="tb-import">Importar datos</button>
     <input type="file" id="tb-import-file" accept=".json" style="display:none">
     <button class="tb-btn danger" id="tb-clear-page">Borrar página</button>
     <button class="tb-btn danger" id="tb-clear-all">Borrar todo</button>
-    <button class="tb-btn" onclick="window.print()">Imprimir</button>
+    <button class="tb-btn" onclick="window.print()">Imprimir todo</button>
   </div>
 </div>`;
 }
