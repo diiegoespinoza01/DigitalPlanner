@@ -174,7 +174,7 @@ function processHtml(html) {
   return html.replace(/Z9(TINT|MID|DEEP|TINK)([0-9a-f]{2})?/gi, (_, base, alpha) => {
     const b = base.toLowerCase().replace('tink','ink');
     return alpha ? `var(--c-${b}-${alpha})` : `var(--c-${b})`;
-  }).replace(/Z9TNAME/g, `<span class="js-theme-name">Greige</span>`);
+  }).replace(/Z9TNAME/g, `Greige`); // outer span ya tiene class="js-theme-name"
 }
 
 function buildThemeCSS(alphas) {
@@ -239,11 +239,10 @@ body { display: flex; flex-direction: column; }
 /* ── Stage / Fit ── */
 #lp-fit {
   flex: 1; overflow: auto; display: flex;
-  align-items: center; justify-content: center; padding: 8px;
+  align-items: flex-start; justify-content: center; padding: 12px;
 }
 #lp-stage {
-  width: ${PAGE_W}px; height: ${PAGE_H}px;
-  position: relative; transform-origin: top center; flex-shrink: 0;
+  transform-origin: top left; flex-shrink: 0; position: relative;
 }
 
 /* ── Páginas base (estilos que brand.jsx inyecta en browser, aquí los ponemos estáticos) ── */
@@ -562,15 +561,20 @@ window.applyTheme = applyTheme;
 
 // ── Escalado ──
 function rescale(){
-  const tH=44, pad=16;
-  const s=Math.min((window.innerWidth-pad)/${PAGE_W},(window.innerHeight-tH-pad)/${PAGE_H});
+  const tH=44, pad=24;
+  const vw=window.innerWidth, vh=window.innerHeight-tH;
+  const s=Math.min((vw-pad)/${PAGE_W},(vh-pad)/${PAGE_H});
   const stage=document.getElementById('lp-stage');
-  if(stage) stage.style.transform='scale('+s+')';
-  const fit=document.getElementById('lp-fit');
-  if(fit){
-    fit.style.minWidth=Math.ceil(${PAGE_W}*s+pad)+'px';
-    fit.style.minHeight=Math.ceil(${PAGE_H}*s+pad)+'px';
-  }
+  if(!stage) return;
+  const scaledW=Math.round(${PAGE_W}*s);
+  const scaledH=Math.round(${PAGE_H}*s);
+  stage.style.transform='scale('+s+')';
+  stage.style.transformOrigin='top left';
+  stage.style.width='${PAGE_W}px';
+  stage.style.height='${PAGE_H}px';
+  // Colapsar el espacio de layout sobrante para que flex centre correctamente
+  stage.style.marginRight=(scaledW-${PAGE_W})+'px';
+  stage.style.marginBottom=(scaledH-${PAGE_H})+'px';
 }
 window.addEventListener('resize', rescale);
 
@@ -676,16 +680,16 @@ function buildToolbarHTML() {
   const dots = THEME_ORDER.map(id =>
     `<span class="tb-dot${id===DEFAULT_THEME?' is-active':''}" data-theme="${id}" style="background:${THEMES[id].mid}" title="${THEMES[id].name}" onclick="applyTheme('${id}')"></span>`
   ).join('');
+  const ps = JSON.stringify(PAGES.map(p=>p.id));
   return `<div id="lp-toolbar">
-  <a href="#hub" class="tb-brand">Linen Paper Co.</a>
+  <a href="#hub" class="tb-brand" onclick="show('hub');return false;">Linen Paper Co.</a>
   <div class="tb-sep"></div>
   <div class="tb-nav">
-    <button onclick="(function(){const i=window._pages?window._pages.indexOf(window._cur):-1;if(i>0)show(window._pages?window._pages[i-1]:'hub');else{const ps=${JSON.stringify(PAGES.map(p=>p.id))};const ci=ps.indexOf(window.currentPage||(location.hash.slice(1)));if(ci>0)show(ps[ci-1]);}})()">←</button>
-    <span id="tb-label">Índice</span>
-    <button onclick="(function(){const ps=${JSON.stringify(PAGES.map(p=>p.id))};const ci=ps.indexOf(document.querySelector('.lp-page.is-active')?.id);if(ci>=0&&ci<ps.length-1)show(ps[ci+1]);})()">→</button>
+    <button title="Anterior" onclick="(function(){var ps=${ps};var a=document.querySelector('.lp-page.is-active');var ci=a?ps.indexOf(a.id):-1;if(ci>0)show(ps[ci-1]);})()">←</button>
+    <span id="tb-label">Portada</span>
+    <button title="Siguiente" onclick="(function(){var ps=${ps};var a=document.querySelector('.lp-page.is-active');var ci=a?ps.indexOf(a.id):-1;if(ci>=0&&ci<ps.length-1)show(ps[ci+1]);})()">→</button>
   </div>
   <div class="tb-sep"></div>
-  <a href="#hub" class="tb-btn" onclick="show('hub');return false;">Índice</a>
   <div class="tb-right">
     <div class="tb-dots">${dots}</div>
     <div class="tb-sep"></div>
