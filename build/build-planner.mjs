@@ -4,6 +4,7 @@ const require = __cr(import.meta.url);
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 import * as esbuild from 'esbuild';
 import https from 'https';
 import http from 'http';
@@ -750,12 +751,16 @@ function buildToolbarHTML() {
 function buildFinalHTML(pagesHtml, globalCSS, themeCSS, runtimeJS) {
   const toolbar = buildToolbarHTML();
   const pagesBlock = pagesHtml.map(p => p.html).join('\n');
+  // Favicon SVG: libreta con espiral y líneas de contenido
+  const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="7" y="2" width="18" height="28" rx="2.5" fill="#EFE6D2"/><rect x="7" y="2" width="5" height="28" rx="2.5" fill="#C9BBA0"/><rect x="10" y="2" width="2" height="28" fill="#C9BBA0"/><line x1="14.5" y1="10" x2="22" y2="10" stroke="#8A7B62" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="14.5" x2="22" y2="14.5" stroke="#8A7B62" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="22" y2="19" stroke="#8A7B62" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="23.5" x2="19" y2="23.5" stroke="#8A7B62" stroke-width="1.8" stroke-linecap="round"/><path d="M22 2h2v7l-1-1.2L22 9Z" fill="#8A7B62"/></svg>`;
+  const faviconB64 = Buffer.from(faviconSvg).toString('base64');
   return `<!DOCTYPE html>
 <html lang="es" data-theme="${DEFAULT_THEME}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
-<title>Planner Digital Todo en Uno · Linen Paper Co.</title>
+<title>Planner Digital · Vida &amp; Plan</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,${faviconB64}">
 <style>
 ${themeCSS}
 ${globalCSS}
@@ -824,9 +829,76 @@ async function main() {
   writeFileSync(outFile, finalHtml, 'utf8');
 
   const sizeKB = Math.round(finalHtml.length / 1024);
-  console.log(`\n✅  out/${DOC_ID}.html  (${sizeKB} KB)\n`);
+  console.log(`\n✅  out/${DOC_ID}.html  (${sizeKB} KB)`);
   console.log('   Páginas:', PAGES.map(p => p.id).join(', '));
   if (sizeKB > 25000) console.warn('  ⚠ El archivo supera 25 MB');
+
+  // 5. Crear ZIP para entrega
+  console.log('\n5/5  Empaquetando ZIP para entrega…');
+  const leeme = `╔══════════════════════════════════════════════╗
+║   PLANNER DIGITAL · VIDA & PLAN              ║
+║   Instrucciones de uso                       ║
+╚══════════════════════════════════════════════╝
+
+CÓMO ABRIR
+──────────
+1. Abre el archivo "planner-digital.html" con
+   Chrome o Safari (escritorio o iPad).
+2. No necesita internet — funciona completamente
+   desde tu computadora o tablet.
+
+NAVEGACIÓN
+──────────
+• Usa las flechas ← → de la barra superior
+  para ir de página en página.
+• Haz clic en los enlaces del índice, las
+  pestañas laterales o el menú de la NavBar
+  para ir directamente a cualquier sección.
+
+ESCRIBIR Y MARCAR
+─────────────────
+• Haz clic en cualquier campo y escribe.
+• Los checkboxes se marcan con un clic.
+• Tus datos se guardan automáticamente en
+  el navegador (no se borran al cerrar).
+
+TEMAS DE COLOR
+──────────────
+Cambia el tema con los círculos de la barra:
+  Greige · Salvia · Lavanda · Cielo · Rubor · Arcilla
+
+EXPORTAR / IMPRIMIR
+────────────────────
+• "Exportar PDF": abre el diálogo de impresión
+  del navegador con solo la página actual →
+  elige "Guardar como PDF".
+• "Imprimir todo": imprime todas las páginas.
+
+MONEDA (sección Finanzas)
+─────────────────────────
+Selecciona tu moneda: CLP · USD · EUR · GBP · MXN · BRL
+El formato de números se ajusta automáticamente.
+
+AVISO SOBRE LOS DATOS
+──────────────────────
+Los datos se guardan en el navegador donde
+abriste el planner. Si vas a cambiar de
+computadora, usa "Exportar PDF" para conservar
+una copia visual de cada página.
+
+══════════════════════════════════════════════
+   ¡Gracias por tu compra! ✦
+══════════════════════════════════════════════
+`;
+  writeFileSync(resolve(OUT, 'LEEME.txt'), leeme, 'utf8');
+  try {
+    execSync(`cd "${OUT}" && zip -9 "${DOC_ID}.zip" "${DOC_ID}.html" "LEEME.txt"`, { stdio: 'pipe' });
+    const zipPath = resolve(OUT, `${DOC_ID}.zip`);
+    const zipKB = Math.round(readFileSync(zipPath).length / 1024);
+    console.log(`✅  out/${DOC_ID}.zip  (${zipKB} KB)  ← archivo para entrega\n`);
+  } catch(e) {
+    console.warn('  ⚠ No se pudo crear el ZIP (zip no disponible):', e.message);
+  }
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════╗
+║   PLANNER DIGITAL · VIDA & PLAN              ║
+║   Instrucciones de uso                       ║
+╚══════════════════════════════════════════════╝
+
+CÓMO ABRIR
+──────────
+1. Abre el archivo "planner-digital.html" con
+   Chrome o Safari (escritorio o iPad).
+2. No necesita internet — funciona completamente
+   desde tu computadora o tablet.
+
+NAVEGACIÓN
+──────────
+• Usa las flechas ← → de la barra superior
+  para ir de página en página.
+• Haz clic en los enlaces del índice, las
+  pestañas laterales o el menú de la NavBar
+  para ir directamente a cualquier sección.
+
+ESCRIBIR Y MARCAR
+─────────────────
+• Haz clic en cualquier campo y escribe.
+• Los checkboxes se marcan con un clic.
+• Tus datos se guardan automáticamente en
+  el navegador (no se borran al cerrar).
+
+TEMAS DE COLOR
+──────────────
+Cambia el tema con los círculos de la barra:
+  Greige · Salvia · Lavanda · Cielo · Rubor · Arcilla
+
+EXPORTAR / IMPRIMIR
+────────────────────
+• "Exportar PDF": abre el diálogo de impresión
+  del navegador con solo la página actual →
+  elige "Guardar como PDF".
+• "Imprimir todo": imprime todas las páginas.
+
+MONEDA (sección Finanzas)
+─────────────────────────
+Selecciona tu moneda: CLP · USD · EUR · GBP · MXN · BRL
+El formato de números se ajusta automáticamente.
+
+AVISO SOBRE LOS DATOS
+──────────────────────
+Los datos se guardan en el navegador donde
+abriste el planner. Si vas a cambiar de
+computadora, usa "Exportar PDF" para conservar
+una copia visual de cada página.
+
+══════════════════════════════════════════════
+   ¡Gracias por tu compra! ✦
+══════════════════════════════════════════════
