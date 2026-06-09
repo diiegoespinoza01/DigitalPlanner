@@ -184,7 +184,7 @@ function TopNav({ theme = 'greige', current, height = 58 }) {
       padding: '0 30px', borderBottom: `1px solid ${LP.line}`, background: LP.paper, gap: 24 }}>
       <a href="#hub" className="lp-link lp-serif" style={{ fontStyle: 'italic', fontWeight: 500,
         fontSize: 21, color: LP.ink, letterSpacing: .2, whiteSpace: 'nowrap' }}>
-        Linen Paper Co.
+        Vida &amp; Plan
       </a>
       <span style={{ width: 1, height: 22, background: LP.line }} />
       <div style={{ display: 'flex', gap: 6, flex: 1 }}>
@@ -257,7 +257,7 @@ function Cover({ theme = 'greige', id }) {
         {/* cabecera */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div className="lp-serif" style={{ fontStyle: 'italic', fontWeight: 500, fontSize: 26, color: LP.ink }}>
-            Linen&nbsp;Paper&nbsp;Co.
+            Vida &amp; Plan
           </div>
           <div style={{ fontFamily: LP.mono, fontSize: 10, letterSpacing: 2.4, textTransform: 'uppercase',
             color: LP.ink3, textAlign: 'right', lineHeight: 1.9 }}>
@@ -1204,7 +1204,23 @@ function Finance({ theme = 'greige', id }) {
 
         {/* IZQUIERDA — presupuesto */}
         <div style={{ flex: '1 1 50%', display: 'flex', flexDirection: 'column' }}>
-          <Eyebrow color={c.deep}>Presupuesto del mes</Eyebrow>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 0 }}>
+            <Eyebrow color={c.deep}>Presupuesto del mes</Eyebrow>
+            {/* (c) selector de moneda */}
+            <div style={{ display: 'flex', gap: 3 }}>
+              {['CLP','USD','EUR','GBP','MXN','BRL'].map(code => (
+                <label key={code} style={{ position: 'relative', cursor: 'pointer',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <input type="radio" className="lp-toggle" name="currency" value={code}
+                    defaultChecked={code === 'CLP'} />
+                  <span className="lp-tg-currency" style={{ fontFamily: LP.mono, fontSize: 7.5,
+                    letterSpacing: .5, padding: '2px 5px', borderRadius: 999,
+                    border: `1px solid ${LP.line}`, color: LP.ink3, display: 'block',
+                    whiteSpace: 'nowrap' }}>{code}</span>
+                </label>
+              ))}
+            </div>
+          </div>
           <div style={{ display: 'flex', gap: 10, background: c.tint, borderRadius: 10,
             padding: '16px 18px', margin: '12px 0 18px' }}>
             {[{k:'Entra',name:'budget-in'},{k:'Sale',name:'budget-out'},{k:'Queda',name:'budget-left'}].map((x, i) => (
@@ -1214,7 +1230,7 @@ function Finance({ theme = 'greige', id }) {
                 {x.name === 'budget-left'
                   ? <span id="finance-balance" className="lp-serif"
                       style={{ fontStyle: 'italic', fontWeight: 500, fontSize: 32, color: c.ink,
-                        lineHeight: 1.1, display: 'block' }}>0 <span style={{ fontSize: 15 }}>€</span></span>
+                        lineHeight: 1.1, display: 'block' }}>0 <span className="currency-sym" style={{ fontSize: 15 }}>$</span></span>
                   : <input type="number" className="lp-field lp-serif" name={x.name} defaultValue=""
                       placeholder="0"
                       style={{ fontStyle: 'italic', fontWeight: 500, fontSize: 32, color: c.ink,
@@ -1253,7 +1269,7 @@ function Finance({ theme = 'greige', id }) {
           <div style={{ border: `1px dashed ${c.mid}`, borderRadius: 9, padding: '11px 14px', marginTop: 14 }}>
             <span style={{ fontFamily: LP.mono, fontSize: 8, letterSpacing: 2, textTransform: 'uppercase', color: c.deep }}>Nota financiera</span>
             <input type="text" className="lp-field lp-serif" name="finance-note"
-              placeholder="Cada euro tiene un propósito."
+              placeholder="Cada peso tiene su propósito."
               style={{ fontStyle: 'italic', fontSize: 16, color: LP.ink2, marginTop: 3, display: 'block',
                 width: '100%', background: 'transparent', border: 'none', outline: 'none',
                 fontFamily: LP.serif, padding: 0 }} />
@@ -1301,7 +1317,7 @@ function Finance({ theme = 'greige', id }) {
             <span style={{ fontFamily: LP.mono, fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: c.deep }}>Total gastos</span>
             <span id="finance-total" className="lp-serif"
               style={{ fontStyle: 'italic', fontWeight: 500, fontSize: 34, color: c.ink }}>
-              0 <span style={{ fontSize: 17 }}>€</span>
+              0 <span className="currency-sym" style={{ fontSize: 17 }}>$</span>
             </span>
           </div>
         </div>

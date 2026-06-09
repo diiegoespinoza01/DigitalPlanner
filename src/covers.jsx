@@ -21,7 +21,7 @@ function Cover({ theme = 'greige', id }) {
         {/* cabecera */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div className="lp-serif" style={{ fontStyle: 'italic', fontWeight: 500, fontSize: 26, color: LP.ink }}>
-            Linen&nbsp;Paper&nbsp;Co.
+            Vida &amp; Plan
           </div>
           <div style={{ fontFamily: LP.mono, fontSize: 10, letterSpacing: 2.4, textTransform: 'uppercase',
             color: LP.ink3, textAlign: 'right', lineHeight: 1.9 }}>

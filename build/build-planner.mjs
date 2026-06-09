@@ -333,6 +333,16 @@ label:has(.lp-toggle-care:checked) {
   border-color: var(--c-mid) !important;
 }
 
+/* Selector de moneda */
+.lp-tg-currency {
+  color: #8C8275; border: 1px solid #D8CFC0; background: transparent;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.lp-toggle:checked + .lp-tg-currency {
+  background: var(--c-tint); border-color: var(--c-deep);
+  color: var(--c-deep); font-weight: 600;
+}
+
 /* ── Print ── */
 @page { size: ${PAGE_W}px ${PAGE_H}px; margin: 0; }
 @media print {
@@ -367,6 +377,22 @@ const DOC_ID = '${docId}';
 const PAGES = ${pagesJson};
 const PAGE_LABEL = ${labelsJson};
 const THEMES_DATA = ${themesJson};
+const CURRENCIES = {
+  CLP:{sym:'$', code:'CLP', dec:0},
+  USD:{sym:'$', code:'USD', dec:2},
+  EUR:{sym:'€', code:'EUR', dec:2},
+  GBP:{sym:'£', code:'GBP', dec:2},
+  MXN:{sym:'$', code:'MXN', dec:2},
+  BRL:{sym:'R$', code:'BRL', dec:2},
+};
+function getFinCurrency(){
+  const r=document.querySelector('#finance input[name="currency"]:checked');
+  return r&&CURRENCIES[r.value]?CURRENCIES[r.value]:CURRENCIES.CLP;
+}
+function fmtAmt(val, cur){
+  if(cur.dec===0) return Math.round(val).toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,'.');
+  return val.toFixed(cur.dec).replace('.',',');
+}
 const THEME_ORDER = ${themeOrderJson};
 
 // ── LocalStorage helpers ──
@@ -487,18 +513,22 @@ function initLedgerAutoGrow(){
 // ── Derivados: finanzas ──
 function updateFinance(){
   const p=document.getElementById('finance'); if(!p) return;
+  const cur=getFinCurrency();
+  const sym=cur.sym;
+  // Actualizar todos los símbolos de moneda en la página
+  p.querySelectorAll('.currency-sym').forEach(el=>{ el.textContent=sym; });
   const inEl=p.querySelector('[name="budget-in"]');
   const outEl=p.querySelector('[name="budget-out"]');
   const balEl=document.getElementById('finance-balance');
   const totalEl=document.getElementById('finance-total');
   const inV=parseFloat(inEl&&inEl.value||0)||0;
   const outV=parseFloat(outEl&&outEl.value||0)||0;
-  if(balEl) balEl.innerHTML=(inV-outV).toFixed(2).replace('.',',')+' <span style="font-size:17px">€</span>';
+  if(balEl) balEl.innerHTML=fmtAmt(inV-outV,cur)+' <span class="currency-sym" style="font-size:17px">'+sym+'</span>';
   let total=0;
   p.querySelectorAll('[name^="ledger-amt-"]').forEach(e=>{
     total+=(parseFloat(e.value.replace(',','.'))||0);
   });
-  if(totalEl) totalEl.innerHTML=total.toFixed(2).replace('.',',')+' <span style="font-size:17px">€</span>';
+  if(totalEl) totalEl.innerHTML=fmtAmt(total,cur)+' <span class="currency-sym" style="font-size:17px">'+sym+'</span>';
   for(let ci=0;ci<8;ci++){
     const sEl=p.querySelector('[name="cat-spent-'+ci+'"]');
     const bEl=p.querySelector('[name="cat-budget-'+ci+'"]');
@@ -562,6 +592,8 @@ document.addEventListener('change', e=>{
     if(page.id==='habits') updateHabitSums();
   } else if(el.type==='radio'){
     lsSet(page.id, 'radio|'+el.name, el.value);
+    // Selector de moneda: actualizar display inmediatamente
+    if(page.id==='finance'&&el.name==='currency') updateFinance();
   }
 });
 
@@ -693,7 +725,7 @@ function buildToolbarHTML() {
     `<span class="tb-dot${id===DEFAULT_THEME?' is-active':''}" data-theme="${id}" style="background:${THEMES[id].mid}" title="${THEMES[id].name}" onclick="applyTheme('${id}')"></span>`
   ).join('');
   return `<div id="lp-toolbar">
-  <a href="#hub" class="tb-brand" onclick="show('hub');return false;">Linen Paper Co.</a>
+  <a href="#hub" class="tb-brand" onclick="show('hub');return false;">Vida &amp; Plan</a>
   <div class="tb-sep"></div>
   <div class="tb-nav">
     <button title="Página anterior" onclick="prevPage()">←</button>

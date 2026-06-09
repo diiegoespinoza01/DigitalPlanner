@@ -16457,7 +16457,7 @@ function TopNav({ theme = "greige", current, height = 58 }) {
     color: LP.ink,
     letterSpacing: 0.2,
     whiteSpace: "nowrap"
-  } }, "Linen Paper Co."), /* @__PURE__ */ import_react.default.createElement("span", { style: { width: 1, height: 22, background: LP.line } }), /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", gap: 6, flex: 1 } }, NAV.map((n) => {
+  } }, "Vida & Plan"), /* @__PURE__ */ import_react.default.createElement("span", { style: { width: 1, height: 22, background: LP.line } }), /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", gap: 6, flex: 1 } }, NAV.map((n) => {
     const on = n === current;
     return /* @__PURE__ */ import_react.default.createElement("a", { key: n, href: NAV_HREF[n], className: "lp-link", style: {
       padding: "5px 13px",
@@ -16532,7 +16532,7 @@ function Cover({ theme = "greige", id }) {
     display: "flex",
     flexDirection: "column",
     padding: "46px 60px"
-  } }, /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start" } }, /* @__PURE__ */ import_react.default.createElement("div", { className: "lp-serif", style: { fontStyle: "italic", fontWeight: 500, fontSize: 26, color: LP.ink } }, "Linen\xA0Paper\xA0Co."), /* @__PURE__ */ import_react.default.createElement("div", { style: {
+  } }, /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start" } }, /* @__PURE__ */ import_react.default.createElement("div", { className: "lp-serif", style: { fontStyle: "italic", fontWeight: 500, fontSize: 26, color: LP.ink } }, "Vida & Plan"), /* @__PURE__ */ import_react.default.createElement("div", { style: {
     fontFamily: LP.mono,
     fontSize: 10,
     letterSpacing: 2.4,
@@ -17700,7 +17700,32 @@ function HabitTracker({ theme = "greige", id }) {
 function Finance({ theme = "greige", id }) {
   const c = T(theme);
   const cats = ["Vivienda", "Comida", "Transporte", "Ocio", "Salud", "Ahorro", "Suscripciones", "Otros"];
-  return /* @__PURE__ */ import_react.default.createElement(Page, { id, theme, tab: "Finanzas", currentNav: "Mes", padding: 28 }, /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", gap: 28, flex: 1, minHeight: 0 } }, /* @__PURE__ */ import_react.default.createElement("div", { style: { flex: "1 1 50%", display: "flex", flexDirection: "column" } }, /* @__PURE__ */ import_react.default.createElement(Eyebrow, { color: c.deep }, "Presupuesto del mes"), /* @__PURE__ */ import_react.default.createElement("div", { style: {
+  return /* @__PURE__ */ import_react.default.createElement(Page, { id, theme, tab: "Finanzas", currentNav: "Mes", padding: 28 }, /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", gap: 28, flex: 1, minHeight: 0 } }, /* @__PURE__ */ import_react.default.createElement("div", { style: { flex: "1 1 50%", display: "flex", flexDirection: "column" } }, /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 0 } }, /* @__PURE__ */ import_react.default.createElement(Eyebrow, { color: c.deep }, "Presupuesto del mes"), /* @__PURE__ */ import_react.default.createElement("div", { style: { display: "flex", gap: 3 } }, ["CLP", "USD", "EUR", "GBP", "MXN", "BRL"].map((code) => /* @__PURE__ */ import_react.default.createElement("label", { key: code, style: {
+    position: "relative",
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+  } }, /* @__PURE__ */ import_react.default.createElement(
+    "input",
+    {
+      type: "radio",
+      className: "lp-toggle",
+      name: "currency",
+      value: code,
+      defaultChecked: code === "CLP"
+    }
+  ), /* @__PURE__ */ import_react.default.createElement("span", { className: "lp-tg-currency", style: {
+    fontFamily: LP.mono,
+    fontSize: 7.5,
+    letterSpacing: 0.5,
+    padding: "2px 5px",
+    borderRadius: 999,
+    border: `1px solid ${LP.line}`,
+    color: LP.ink3,
+    display: "block",
+    whiteSpace: "nowrap"
+  } }, code))))), /* @__PURE__ */ import_react.default.createElement("div", { style: {
     display: "flex",
     gap: 10,
     background: c.tint,
@@ -17722,7 +17747,7 @@ function Finance({ theme = "greige", id }) {
       }
     },
     "0 ",
-    /* @__PURE__ */ import_react.default.createElement("span", { style: { fontSize: 15 } }, "\u20AC")
+    /* @__PURE__ */ import_react.default.createElement("span", { className: "currency-sym", style: { fontSize: 15 } }, "$")
   ) : /* @__PURE__ */ import_react.default.createElement(
     "input",
     {
@@ -17812,7 +17837,7 @@ function Finance({ theme = "greige", id }) {
       type: "text",
       className: "lp-field lp-serif",
       name: "finance-note",
-      placeholder: "Cada euro tiene un prop\xF3sito.",
+      placeholder: "Cada peso tiene su prop\xF3sito.",
       style: {
         fontStyle: "italic",
         fontSize: 16,
@@ -17934,7 +17959,7 @@ function Finance({ theme = "greige", id }) {
       style: { fontStyle: "italic", fontWeight: 500, fontSize: 34, color: c.ink }
     },
     "0 ",
-    /* @__PURE__ */ import_react.default.createElement("span", { style: { fontSize: 17 } }, "\u20AC")
+    /* @__PURE__ */ import_react.default.createElement("span", { className: "currency-sym", style: { fontSize: 17 } }, "$")
   )))));
 }
 function Wellness({ theme = "greige", id }) {

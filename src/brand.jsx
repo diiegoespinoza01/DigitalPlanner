@@ -179,7 +179,7 @@ function TopNav({ theme = 'greige', current, height = 58 }) {
       padding: '0 30px', borderBottom: `1px solid ${LP.line}`, background: LP.paper, gap: 24 }}>
       <a href="#hub" className="lp-link lp-serif" style={{ fontStyle: 'italic', fontWeight: 500,
         fontSize: 21, color: LP.ink, letterSpacing: .2, whiteSpace: 'nowrap' }}>
-        Linen Paper Co.
+        Vida &amp; Plan
       </a>
       <span style={{ width: 1, height: 22, background: LP.line }} />
       <div style={{ display: 'flex', gap: 6, flex: 1 }}>
